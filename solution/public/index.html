@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rebel-I ONG · Donor dashboard</title>
+  <style>
+    :root { --ink: #07171d; --teal: #1193b0; --teal-bg: #e6f4f7; --coral: #da7756; --page: #f4f8f9; --mute: #3c5259; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: var(--page); color: var(--ink); }
+    header { background: var(--ink); color: #fff; padding: 18px 32px; display: flex; align-items: baseline; gap: 16px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header span { color: #9fdcea; }
+    main { max-width: 1100px; margin: 0 auto; padding: 24px; display: grid; gap: 20px; grid-template-columns: repeat(12, 1fr); }
+    .card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 6px 20px rgba(7, 23, 29, 0.07); }
+    .kpi { grid-column: span 3; }
+    .kpi b { display: block; font-size: 34px; margin-top: 6px; }
+    .kpi small { color: var(--mute); font-weight: 600; }
+    .trend { grid-column: span 7; }
+    .programs { grid-column: span 5; }
+    h2 { margin: 0 0 14px; font-size: 18px; }
+    .bars { display: flex; gap: 18px; align-items: flex-end; height: 180px; }
+    .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; font-size: 13px; color: var(--mute); }
+    .bar i { width: 100%; background: var(--teal); border-radius: 8px 8px 0 0; }
+    .row { display: grid; grid-template-columns: 110px 1fr 80px; gap: 10px; align-items: center; margin: 10px 0; font-size: 14px; }
+    .row i { height: 14px; border-radius: 999px; background: var(--coral); display: block; }
+    .money { text-align: right; font-weight: 700; }
+    .call { grid-column: span 12; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #e2e8f0; }
+    th { color: var(--mute); font-weight: 600; }
+    .import { grid-column: span 12; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .import h2 { margin: 0 12px 0 0; }
+    .import input { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+    .import button { padding: 9px 18px; border: 0; border-radius: 8px; background: var(--teal); color: #fff; font-weight: 700; cursor: pointer; }
+    #result { font-weight: 600; }
+    .ok { color: #047857; } .error { color: #dc2626; }
+  </style>
+</head>
+<body>
+  <header><h1>Rebel-I ONG</h1><span>Donor dashboard</span></header>
+  <main>
+    <section class="card kpi"><small>Active donors</small><b id="active">–</b></section>
+    <section class="card kpi"><small>Inactive donors</small><b id="inactive">–</b></section>
+    <section class="card kpi"><small>Total donated</small><b id="total">–</b></section>
+    <section class="card kpi"><small>Average gift</small><b id="average">–</b></section>
+    <section class="card trend"><h2>Donations per month</h2><div class="bars" id="bars"></div></section>
+    <section class="card programs"><h2>Program ranking</h2><div id="programs"></div></section>
+    <section class="card call"><h2>Call first · inactive donors by lifetime value</h2>
+      <table><thead><tr><th>Donor</th><th>Lifetime total</th><th>Last donation</th></tr></thead><tbody id="call"></tbody></table>
+    </section>
+    <form class="card import" id="import">
+      <h2>Import donations</h2>
+      <input type="file" name="file" accept=".csv,text/csv" required />
+      <input type="password" name="key" placeholder="Admin key" required />
+      <button>Import CSV</button>
+      <span id="result"></span>
+    </form>
+  </main>
+  <script type="module">
+    const get = async (path) => (await fetch(path)).json();
+    const money = (n) => '$' + n.toLocaleString('en-US');
+
+    async function render() {
+      const [s, months, programs, call] = await Promise.all([get('/api/summary'), get('/api/donations-monthly'), get('/api/programs'), get('/api/reactivation')]);
+      document.querySelector('#active').textContent = s.activeDonors;
+      document.querySelector('#inactive').textContent = s.inactiveDonors;
+      document.querySelector('#total').textContent = money(s.totalDonated);
+      document.querySelector('#average').textContent = money(s.averageGift);
+      document.querySelector('#call').innerHTML = call.map((d) =>
+        `<tr><td>${d.donor}</td><td>${money(d.total)}</td><td>${d.lastDonation}</td></tr>`).join('');
+      const top = Math.max(...months.map((m) => m.total), 1);
+      document.querySelector('#bars').innerHTML = months.map((m) =>
+        `<div class="bar"><strong>${money(m.total)}</strong><i style="height:${(m.total / top) * 130}px"></i>${m.month} · ${m.count}</div>`).join('');
+      const best = Math.max(...programs.map((p) => p.total), 1);
+      document.querySelector('#programs').innerHTML = programs.map((p) =>
+        `<div class="row"><span>${p.program}</span><i style="width:${(p.total / best) * 100}%"></i><span class="money">${money(p.total)}</span></div>`).join('');
+    }
+    document.querySelector('#import').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = new FormData(event.target);
+      const res = await fetch('/api/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/csv', 'X-Admin-Key': form.get('key') },
+        body: await form.get('file').text(),
+      });
+      const body = await res.json();
+      const result = document.querySelector('#result');
+      result.className = res.ok ? 'ok' : 'error';
+      result.textContent = res.ok ? `✓ ${body.donors} donors · ${body.donations} donations · ${body.skipped} skipped` : body.error;
+      if (res.ok) render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

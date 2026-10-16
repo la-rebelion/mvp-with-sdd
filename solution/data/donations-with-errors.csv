@@ -1,0 +1,5 @@
+donor,status,date,amount,type,program
+Ana Torres,active,2026-10-03,500,transfer,Food Bank
+,active,2026-10-04,200,cash,Health
+Luis Mendoza,inactive,2026-10-05,abc,card,Education
+Carmen Ruiz,active,2026-10-06,300,cash,Health

@@ -1,0 +1,12 @@
+{
+  "name": "rebel-i-ong-donor-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Donor dashboard MVP built with Spec-Driven Development (OpenSpec) in the course mvp-with-sdd",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=20.19" }
+}

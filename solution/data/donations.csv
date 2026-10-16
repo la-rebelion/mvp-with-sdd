@@ -1,0 +1,15 @@
+donor,status,date,amount,type,program
+Ana Torres,active,2026-07-03,500,transfer,Food Bank
+Ana Torres,active,2026-08-05,500,transfer,Food Bank
+Ana Torres,active,2026-09-04,500,transfer,Food Bank
+Luis Mendoza,inactive,2026-07-12,1200,card,Education
+Carmen Ruiz,active,2026-07-20,300,cash,Health
+Carmen Ruiz,active,2026-09-18,300,cash,Health
+Jorge Peña,inactive,2026-07-28,2500,transfer,Education
+Sofía Lara,active,2026-08-09,150,card,Food Bank
+Sofía Lara,active,2026-09-09,150,card,Food Bank
+Grupo Avance,active,2026-08-15,4000,transfer,Education
+Pedro Salas,inactive,2026-08-21,800,in-kind,Food Bank
+Marta Gil,active,2026-09-02,250,cash,Health
+Marta Gil,active,2026-09-27,250,cash,Education
+Rebel Bakery,active,2026-09-14,1800,in-kind,Food Bank
