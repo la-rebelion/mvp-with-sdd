@@ -1,4 +1,26 @@
-# MVP with Spec-Driven Development
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Course-Spec%20Driven%20Development-1193b0?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/La%20Rebelion%20Labs-Challenge%20the%20Status%20Quo-da7756?style=for-the-badge" />
+</p>
+
+<h1 align="center">MVP with Spec-Driven Development</h1>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=tJZXqNURrbw"><b>Watch the Video Guide</b></a>
+</p>
+
+<p align="center">
+  <a href="https://rebelion.la"><b>Website</b></a>
+  ·
+  <a href="https://www.youtube.com/@LaRebelionLabs"><b>YouTube Channel</b></a>
+  ·
+  <a href="https://x.com/LaRebelionLabs"><b>X</b></a>
+  ·
+  <a href="https://www.linkedin.com/company/larebelion-labs"><b>LinkedIn</b></a>
+</p>
+
+---
 
 A hands-on course on **Spec-Driven Development (SDD)** with AI coding agents (Claude Code, Codex, GitHub Copilot, Cursor, and others), using **[OpenSpec](https://github.com/Fission-AI/OpenSpec)**.
 
@@ -64,4 +86,4 @@ On Windows PowerShell, use `$env:ADMIN_KEY="rebel"; npm start`.
 - Birgitta Böckeler, "Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl", martinfowler.com (Exploring Gen AI series): <https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html>
 - La Rebelion Labs: <https://rebelion.la>
 
-Go Rebels!
+Go Rebels! 
